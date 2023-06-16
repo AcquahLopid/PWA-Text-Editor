@@ -19,47 +19,49 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html',
-        chunks: ['main'],
+        template: './index.html',
+        title: 'JATE'
       }),
-      new HtmlWebpackPlugin({
-        filename: 'install.html',
-        template: './src/install.html',
-        chunks: ['install'],
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
       }),
+
       new WebpackPwaManifest({
-        filename: 'manifest.json',
-        name: 'My App',
-        short_name: 'App',
-        description: 'My Progressive Web App',
-        background_color: '#ffffff',
-        theme_color: '#000000',
+        fingerprints: false,
+        inject: true,
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description: 'Just another text editor',
+        background_color: '#232f3d',
+        theme_color: '#232f3d',
+        start_url: '/',
+        publicPath: '/',
         icons: [
           {
-            src: path.resolve('src/assets/icon.png'),
+            src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
         ],
       }),
-      new InjectManifest({
-        swSrc: './src/sw.js',
-      }),
+
     ],
 
     module: {
       rules: [
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.js$/,
+          test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             },
           },
         },
